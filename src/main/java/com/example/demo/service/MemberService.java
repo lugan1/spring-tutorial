@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.model.MemberDto;
-import com.example.demo.model.PasswordResetDto;
+import com.example.demo.model.response.MemberDto;
+import com.example.demo.model.request.PasswordResetDto;
 
 import java.util.List;
 import java.util.Optional;

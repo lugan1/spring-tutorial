@@ -1,0 +1,12 @@
+logging:
+  config: classpath:log/log4j2-dev.xml
+
+file:
+  path: /app/data
+  url: https://127.0.0.1/data
+
+ai:
+  url: http://127.0.0.1:38081/
+
+dashboard:
+  url: https://127.0.0.1

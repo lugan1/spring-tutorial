@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  main:
+    banner-mode: off
+
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+    defer-datasource-initialization: true
+
+  h2:
+    console:
+      enabled: true
+
+logging.level:
+  org.hibernate.SQL: off
+  org.hibernate.type : trace #바인딩된 파라미터까지 볼 수 있도록
+
+file:
+  path: C:\NOS\isolation_file

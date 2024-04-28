@@ -1,0 +1,13 @@
+file:
+  path: C:\NOS\isolation_file
+  url: https://isol.resource.inphr.com/data
+
+ai:
+  url: http://127.0.0.1:28081/
+
+dashboard:
+  url: https://127.0.0.1
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type : trace #바인딩된 파라미터까지 볼 수 있도록
