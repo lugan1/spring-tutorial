@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.BaseResponse;
-import com.example.demo.model.response.MemberDto;
 import com.example.demo.model.request.PasswordResetDto;
+import com.example.demo.model.response.MemberDto;
 import com.example.demo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

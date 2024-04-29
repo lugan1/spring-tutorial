@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.security.SignatureException;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.example.demo.enumeration.ErrorCode.*;
+import static com.example.demo.enumeration.ErrorCode.INVALID_INPUT_VALUE;
+import static com.example.demo.enumeration.ErrorCode.INVALID_TOKEN;
 
 @Slf4j
 @RestControllerAdvice

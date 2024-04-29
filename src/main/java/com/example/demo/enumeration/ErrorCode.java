@@ -80,12 +80,8 @@ public enum ErrorCode {
     USER_FCM_TOKEN_NOT_EXIST(404, "E003", ""); // 해당 메시지는 userFCMTokenNotExistException에 존재
 
 
-    private int status;
-    private String code;
-    private String message;
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    private final int status;
+    private final String code;
+    private final String message;
 }
 

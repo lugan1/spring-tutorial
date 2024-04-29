@@ -4,7 +4,6 @@ import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.model.ErrorResponseDto;
 import com.example.demo.model.FieldError;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,8 +30,6 @@ import java.nio.file.AccessDeniedException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static com.example.demo.enumeration.ErrorCode.*;
 
@@ -40,8 +37,7 @@ import static com.example.demo.enumeration.ErrorCode.*;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    private final Consumer<Exception> logError = e -> log.error("[Exception] : {}", e.getMessage());
-    
+
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e,
                                                                          @NonNull HttpHeaders headers,
@@ -66,7 +62,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(List.of(fieldError))
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -78,7 +74,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .code(UNSUPPORTED_MEDIA_TYPE.getCode())
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
@@ -105,7 +101,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(filedError)
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
@@ -124,7 +120,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(List.of(fieldError))
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -155,7 +151,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                     .build();
         }
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -183,7 +179,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .code(UNAUTHORIZED.getCode())
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
@@ -200,7 +196,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                     .build();
         }
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -218,7 +214,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(List.of(fieldError))
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -238,7 +234,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(ACCESS_DENIED.getMessage())
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -249,6 +245,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(INVALID_AUTHENTICATION.getMessage())
                 .build();
 
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
@@ -259,7 +256,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(DATA_INTEGRITY_CONSTRAINT_VIOLATION.getMessage())
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
@@ -278,7 +275,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(List.of(fieldError))
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -291,10 +288,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
-                .errors(e.getErrors())
                 .build();
 
-        logError.accept(e);
+        log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
