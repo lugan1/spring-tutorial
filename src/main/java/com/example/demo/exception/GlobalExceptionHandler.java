@@ -31,6 +31,7 @@ import java.nio.file.AccessDeniedException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.example.demo.enumeration.ErrorCode.*;
@@ -39,9 +40,13 @@ import static com.example.demo.enumeration.ErrorCode.*;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    private final Consumer<Exception> logError = e -> log.error("[Exception] : {}", e.getMessage());
+    
     @Override
-    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e, @NonNull HttpHeaders headers,
-                                                                         @NonNull HttpStatusCode status, @NonNull WebRequest request) {
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e,
+                                                                         @NonNull HttpHeaders headers,
+                                                                         @NonNull HttpStatusCode status,
+                                                                         @NonNull WebRequest request) {
         String[] supportedMethods = e.getSupportedMethods();
         StringBuilder sb = new StringBuilder();
         sb.append("해당 URI에서 사용가능한 메서드 목록 : ");
@@ -61,6 +66,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(List.of(fieldError))
                 .build();
 
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -72,6 +78,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .code(UNSUPPORTED_MEDIA_TYPE.getCode())
                 .build();
 
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
@@ -97,6 +104,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .code(INVALID_INPUT_VALUE.getCode())
                 .errors(filedError)
                 .build();
+
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
@@ -114,6 +123,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .code(NOT_FOUND.getCode())
                 .errors(List.of(fieldError))
                 .build();
+
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
@@ -143,6 +154,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                     .errors(List.of(fieldError))
                     .build();
         }
+
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -169,6 +182,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final ErrorResponseDto response = ErrorResponseDto.builder()
                 .code(UNAUTHORIZED.getCode())
                 .build();
+
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
@@ -184,6 +199,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                     .code(INTERNAL_AUTHENTICATION.getCode())
                     .build();
         }
+
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -201,50 +218,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(List.of(fieldError))
                 .build();
 
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
-/*    @ExceptionHandler
-    protected ResponseEntity<ErrorResponseDto> handleSignatureException(SignatureException e) {
-        log.error("exception: " + e.getClass().getSimpleName());
-        log.error("message: " + e.getMessage());
-        final ErrorResponseDto response = ErrorResponseDto.of(INVALID_TOKEN);
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleConstraintViolationException(ConstraintViolationException e) {
-        log.error("exception: " + e.getClass().getSimpleName());
-        log.error("message: " + e.getMessage());
-        final ErrorResponseDto response = ErrorResponseDto.of(INVALID_INPUT_VALUE, e.getConstraintViolations());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleMalformedJwtException(MalformedJwtException e) {
-        log.error("exception: " + e.getClass().getSimpleName());
-        log.error("message: " + e.getMessage());
-        final ErrorResponseDto response = ErrorResponseDto.of(INVALID_TOKEN);
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleExpiredJwtException(ExpiredJwtException e) {
-        log.error("exception: " + e.getClass().getSimpleName());
-        log.error("message: " + e.getMessage());
-        final ErrorResponseDto response = ErrorResponseDto.of(EXPIRED_TOKEN);
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleUnsupportedJwtException(UnsupportedJwtException e) {
-        log.error("exception: " + e.getClass().getSimpleName());
-        log.error("message: " + e.getMessage());
-        final ErrorResponseDto response = ErrorResponseDto.of(UNSUPPORTED_TOKEN);
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }*/
-
-// 토큰 검증 오류 끝
-    //    404예외 처리 핸들러
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponseDto> handleIllegalArgumentExceptionJwtException(IllegalArgumentException e) {
@@ -262,6 +238,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(ACCESS_DENIED.getMessage())
                 .build();
 
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -281,6 +258,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .code(DATA_INTEGRITY_CONSTRAINT_VIOLATION.getCode())
                 .message(DATA_INTEGRITY_CONSTRAINT_VIOLATION.getMessage())
                 .build();
+
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
@@ -298,6 +277,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .code(INTERNAL_SERVER_ERROR.getCode())
                 .errors(List.of(fieldError))
                 .build();
+
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -312,6 +293,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(errorCode.getMessage())
                 .errors(e.getErrors())
                 .build();
+
+        logError.accept(e);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
