@@ -53,23 +53,20 @@ public class WebSecurityConfig {
         final JWTLoginFilter loginFilter = new JWTLoginFilter(authenticationConfiguration.getAuthenticationManager(), objectMapper);
         final JWTCheckFilter checkFilter = new JWTCheckFilter(authenticationConfiguration.getAuthenticationManager(), userDetailsService);
 
-        http.httpBasic(AbstractHttpConfigurer::disable)
+        return http.httpBasic(AbstractHttpConfigurer::disable)
                 .cors(httpSecurityCorsConfigurer -> corsConfigurationSource())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeRequests(request ->
+                .authorizeHttpRequests(request ->
                         request.requestMatchers(AUTH_WHITELIST).permitAll()
                                 .requestMatchers(MEMBER_AUTHLIST).hasRole("MEMBER")
                                 .anyRequest()
                                 .authenticated()
                 )
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(checkFilter, BasicAuthenticationFilter.class)
-                .exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint));
-
-        return http.build();
+                .exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint))
+                .build();
     }
 
     public void corsConfigurationSource() {
