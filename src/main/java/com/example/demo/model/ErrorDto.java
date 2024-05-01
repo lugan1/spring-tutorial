@@ -8,8 +8,8 @@ import java.util.List;
 
 @Getter
 @Builder
-public class ErrorResponseDto {
+public class ErrorDto {
     private String code;
     private String message;
-    private List<FieldError> errors;
+    private List<FieldErrorDto> errors;
 }

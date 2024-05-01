@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.BaseResponse;
+import com.example.demo.model.ResponseDto;
 import com.example.demo.model.request.LoginDto;
 import com.example.demo.model.response.LoginResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublicController {
 
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse<LoginResponseDto>> login(
+    public ResponseEntity<ResponseDto<LoginResponseDto>> login(
             @RequestBody LoginDto loginDto
     ) {
         LoginResponseDto login = new LoginResponseDto("token", 1234L);
-        return ResponseEntity.ok().body(new BaseResponse<>(login));
+        return ResponseEntity.ok().body(new ResponseDto<>(login));
     }
 }

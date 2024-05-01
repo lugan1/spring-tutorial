@@ -1,8 +1,8 @@
 package com.example.demo.exception;
 
 import com.example.demo.enumeration.ErrorCode;
-import com.example.demo.model.ErrorResponseDto;
-import com.example.demo.model.FieldError;
+import com.example.demo.model.ErrorDto;
+import com.example.demo.model.FieldErrorDto;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -51,15 +51,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             sb.append(" ");
         }
 
-        final FieldError fieldError = FieldError.builder()
+        final FieldErrorDto fieldErrorDto = FieldErrorDto.builder()
                 .field(sb.toString())
                 .reason("현재 요청 HTTP메서드 : " + e.getMethod())
                 .build();
 
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+        final ErrorDto response = ErrorDto.builder()
                 .code(METHOD_NOT_ALLOWED.getCode())
                 .message(sb.toString())
-                .errors(List.of(fieldError))
+                .errors(List.of(fieldErrorDto))
                 .build();
 
         log.error("[Exception] : {}", e.getMessage(), e);
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
             @NonNull HttpMediaTypeNotSupportedException e, @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
 
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+        final ErrorDto response = ErrorDto.builder()
                 .code(UNSUPPORTED_MEDIA_TYPE.getCode())
                 .build();
 
@@ -84,11 +84,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException e, @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
 
-        final List<FieldError> filedError = e.getBindingResult()
+        final List<FieldErrorDto> filedError = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> {
-                    return FieldError.builder()
+                    return FieldErrorDto.builder()
                             .field(error.getField())
                             .value(error.getRejectedValue() == null ? "" : error.getRejectedValue().toString())
                             .reason(error.getDefaultMessage())
@@ -96,7 +96,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 })
                 .toList();
 
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+        final ErrorDto response = ErrorDto.builder()
                 .code(INVALID_INPUT_VALUE.getCode())
                 .errors(filedError)
                 .build();
@@ -110,14 +110,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNoHandlerFoundException(
             NoHandlerFoundException e, @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
 
-        final FieldError fieldError = FieldError.builder()
+        final FieldErrorDto fieldErrorDto = FieldErrorDto.builder()
                 .field(e.getRequestURL())
                 .reason("존재하지 않는 URL입니다.")
                 .build();
 
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+        final ErrorDto response = ErrorDto.builder()
                 .code(NOT_FOUND.getCode())
-                .errors(List.of(fieldError))
+                .errors(List.of(fieldErrorDto))
                 .build();
 
         log.error("[Exception] : {}", e.getMessage(), e);
@@ -128,26 +128,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleHttpMessageNotReadable(
             HttpMessageNotReadableException e, @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
 
-        final ErrorResponseDto response;
+        final ErrorDto response;
 
         if (e.getCause() instanceof MismatchedInputException mismatchedInputException) {
-            final FieldError fieldError = FieldError.builder()
+            final FieldErrorDto fieldErrorDto = FieldErrorDto.builder()
                     .field(mismatchedInputException.getPath().get(0).getFieldName() + "필드의 값이 잘못되었습니다.")
                     .reason("입력 포맷을 확인해 보십시오")
                     .build();
 
-            response = ErrorResponseDto.builder()
+            response = ErrorDto.builder()
                     .code(INVALID_INPUT_VALUE.getCode())
-                    .errors(List.of(fieldError))
+                    .errors(List.of(fieldErrorDto))
                     .build();
         } else {
-            final FieldError fieldError = FieldError.builder()
+            final FieldErrorDto fieldErrorDto = FieldErrorDto.builder()
                     .reason("입력 포맷을 확인해 보십시오")
                     .build();
-            response = ErrorResponseDto
+            response = ErrorDto
                     .builder()
                     .code(INVALID_INPUT_VALUE.getCode())
-                    .errors(List.of(fieldError))
+                    .errors(List.of(fieldErrorDto))
                     .build();
         }
 
@@ -160,13 +160,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             MissingServletRequestParameterException e, @NonNull HttpHeaders headers,
             @NonNull HttpStatusCode status, @NonNull WebRequest request) {
 
-        final FieldError fieldError = FieldError.builder()
+        final FieldErrorDto fieldErrorDto = FieldErrorDto.builder()
                 .field("결여된 파라미터 명 : " + e.getParameterName())
                 .build();
 
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+        final ErrorDto response = ErrorDto.builder()
                 .code(MISSING_PARAMETER.getCode())
-                .errors(List.of(fieldError))
+                .errors(List.of(fieldErrorDto))
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -174,8 +174,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     //Spring security 오류
 
     @ExceptionHandler
-    protected ResponseEntity<ErrorResponseDto> handleBadCredentialException(BadCredentialsException e) {
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+    protected ResponseEntity<ErrorDto> handleBadCredentialException(BadCredentialsException e) {
+        final ErrorDto response = ErrorDto.builder()
                 .code(UNAUTHORIZED.getCode())
                 .build();
 
@@ -184,14 +184,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    protected ResponseEntity<ErrorResponseDto> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e) {
-        final ErrorResponseDto response;
+    protected ResponseEntity<ErrorDto> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e) {
+        final ErrorDto response;
         if (e.getMessage().contains("AttributeConverter")) {
-            response =  ErrorResponseDto.builder()
+            response =  ErrorDto.builder()
                     .code(CONVERTED_FAIL.getCode())
                     .build();
         } else {
-            response =  ErrorResponseDto.builder()
+            response =  ErrorDto.builder()
                     .code(INTERNAL_AUTHENTICATION.getCode())
                     .build();
         }
@@ -201,17 +201,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    protected ResponseEntity<ErrorResponseDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        final FieldError fieldError = FieldError.builder()
+    protected ResponseEntity<ErrorDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        final FieldErrorDto fieldErrorDto = FieldErrorDto.builder()
                 .field(e.getName())
                 .value(e.getValue() == null ? "" : e.getValue().toString())
                 .reason(e.getErrorCode())
                 .build();
 
-        final ErrorResponseDto response = ErrorResponseDto
+        final ErrorDto response = ErrorDto
                 .builder()
                 .code(INVALID_TYPE_VALUE.getCode())
-                .errors(List.of(fieldError))
+                .errors(List.of(fieldErrorDto))
                 .build();
 
         log.error("[Exception] : {}", e.getMessage(), e);
@@ -219,8 +219,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentExceptionJwtException(IllegalArgumentException e) {
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+    public ResponseEntity<ErrorDto> handleIllegalArgumentExceptionJwtException(IllegalArgumentException e) {
+        final ErrorDto response = ErrorDto.builder()
                 .code(ILLEGAL_ARGUMENT.getCode())
                 .message(ILLEGAL_ARGUMENT.getMessage())
                 .build();
@@ -228,8 +228,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentExceptionJwtException(AuthenticationException e) {
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+    public ResponseEntity<ErrorDto> handleIllegalArgumentExceptionJwtException(AuthenticationException e) {
+        final ErrorDto response = ErrorDto.builder()
                 .code(ACCESS_DENIED.getCode())
                 .message(ACCESS_DENIED.getMessage())
                 .build();
@@ -239,8 +239,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentExceptionJwtException(AccessDeniedException e) {
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+    public ResponseEntity<ErrorDto> handleIllegalArgumentExceptionJwtException(AccessDeniedException e) {
+        final ErrorDto response = ErrorDto.builder()
                 .code(INVALID_AUTHENTICATION.getCode())
                 .message(INVALID_AUTHENTICATION.getMessage())
                 .build();
@@ -250,8 +250,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler //무결성 제약조건 위반 오류
-    public ResponseEntity<ErrorResponseDto> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+    public ResponseEntity<ErrorDto> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
+        final ErrorDto response = ErrorDto.builder()
                 .code(DATA_INTEGRITY_CONSTRAINT_VIOLATION.getCode())
                 .message(DATA_INTEGRITY_CONSTRAINT_VIOLATION.getMessage())
                 .build();
@@ -265,14 +265,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception e, @Nullable Object body, @NonNull HttpHeaders headers, @NonNull HttpStatusCode statusCode, @NonNull WebRequest request) {
 
-        final FieldError fieldError = FieldError.builder()
+        final FieldErrorDto fieldErrorDto = FieldErrorDto.builder()
                 .field(e.getClass().getSimpleName())
                 .reason("알수 없는 서버 에러발생")
                 .build();
 
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+        final ErrorDto response = ErrorDto.builder()
                 .code(INTERNAL_SERVER_ERROR.getCode())
-                .errors(List.of(fieldError))
+                .errors(List.of(fieldErrorDto))
                 .build();
 
         log.error("[Exception] : {}", e.getMessage(), e);
@@ -281,10 +281,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     // 비즈니스 요구사항에 따른 Exception
     @ExceptionHandler
-    protected ResponseEntity<ErrorResponseDto> handleBusinessException(BusinessException e) {
+    protected ResponseEntity<ErrorDto> handleBusinessException(BusinessException e) {
         final ErrorCode errorCode = e.getErrorCode();
 
-        final ErrorResponseDto response = ErrorResponseDto
+        final ErrorDto response = ErrorDto
                 .builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())

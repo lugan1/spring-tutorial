@@ -1,13 +1,38 @@
-file:
-  path: C:\NOS\isolation_file
-  url: https://isol.resource.inphr.com/data
+server:
+  port: 8080
 
-ai:
-  url: http://127.0.0.1:28081/
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/test
+    username: sa
+    password:
 
-dashboard:
-  url: https://127.0.0.1
+  jpa:
+    show-sql: false
+    generate-ddl: true
+    properties:
+      hibernate:
+        # p6 spy 사용으로 false 처리
+        show-sql: false
+        format_sql: false
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 25MB
 
-logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type : trace #바인딩된 파라미터까지 볼 수 있도록
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type: trace
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+      multiline: true

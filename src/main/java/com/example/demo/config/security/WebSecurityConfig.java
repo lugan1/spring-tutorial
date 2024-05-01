@@ -37,6 +37,7 @@ public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/public/**",
+            "/members/**"
     };
 
     private static final String[] MEMBER_AUTHLIST = {

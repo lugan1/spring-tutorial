@@ -1,46 +1,43 @@
-spring:
-  datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/selfisolation?characterEncoding=UTF-8
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+server:
+  port: 8080
 
+spring:
+  profiles:
+    group:
+      local:
+        - site-local
+        - db-local
+      dev:
+        - site-dev
+        - db-dev
+      prod:
+    include:
+      - db
+      - my-service
+      - site
+    active: prod
   jpa:
     properties:
       hibernate:
         format_sql: true
-        cache:
-          use_second_level_cache: true
-          use_query_cache: true
-          region:
-            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+        jdbc:
+          batch_size: 200
+          batch_versioned_data: true
+        order_inserts: true # hibernate 내부에 추가한 insert 작업을 먼저 정렬 후 순서대로 insert 작업 실행
+        order_updates: true
+  web:
+    resources:
+      add-mappings: false
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    throw-exception-if-no-handler-found: true
 
-  data:
-    web:
-      pageable:
-        # ?page=1 -> offset 0으로 계산하는 설정
-        one-indexed-parameters: true
-
-server:
-  port: 8081
 
 logging:
   level:
     org:
       hibernate:
         SQL: debug
-        type: trace #바인딩된 파라미터까지 볼 수 있도록
-
-sms:
-  id: ${SMS_ID}
-  pw: ${SMS_PW}
-
-# Spring Actuator
-management:
-  endpoints:
-    web:
-      # 기본 path로서 잘 알려진 /actuator를 노출하지 않도록 변경
-      base-path: /monitor
-      exposure:
-        # health와 metric만 public으로 노출
-        include: health,metrics
+        type: trace
 

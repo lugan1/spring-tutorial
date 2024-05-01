@@ -1,7 +1,7 @@
 package com.example.demo.exception;
 
-import com.example.demo.model.ErrorResponseDto;
-import com.example.demo.model.FieldError;
+import com.example.demo.model.ErrorDto;
+import com.example.demo.model.FieldErrorDto;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,16 +19,16 @@ import static com.example.demo.enumeration.ErrorCode.INVALID_TOKEN;
 @RestControllerAdvice
 public class AuthExceptionHandler {
     @ExceptionHandler
-    protected ResponseEntity<ErrorResponseDto> handleSignatureException(SignatureException e) {
-        final ErrorResponseDto response = ErrorResponseDto.builder().code(INVALID_TOKEN.getCode()).build();
+    protected ResponseEntity<ErrorDto> handleSignatureException(SignatureException e) {
+        final ErrorDto response = ErrorDto.builder().code(INVALID_TOKEN.getCode()).build();
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleConstraintViolationException(ConstraintViolationException e) {
-        final List<FieldError> fieldErrorList = e.getConstraintViolations()
+    public ResponseEntity<ErrorDto> handleConstraintViolationException(ConstraintViolationException e) {
+        final List<FieldErrorDto> fieldErrorDtoList = e.getConstraintViolations()
                 .stream()
-                .map(error -> FieldError
+                .map(error -> FieldErrorDto
                                 .builder()
                                 .field(error.getPropertyPath().toString())
                                 .reason(error.getMessageTemplate())
@@ -36,10 +36,10 @@ public class AuthExceptionHandler {
                 )
                 .toList();
 
-        final ErrorResponseDto response = ErrorResponseDto.builder()
+        final ErrorDto response = ErrorDto.builder()
                 .code(INVALID_INPUT_VALUE.getCode())
                 .message(INVALID_INPUT_VALUE.getMessage())
-                .errors(fieldErrorList)
+                .errors(fieldErrorDtoList)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

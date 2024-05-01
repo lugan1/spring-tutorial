@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class FieldError {
+public class FieldErrorDto {
     private String field;
     private String value;
     private String reason;
