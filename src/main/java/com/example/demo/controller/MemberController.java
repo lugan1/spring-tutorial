@@ -32,9 +32,9 @@ public class MemberController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<MemberDto>> getUser(@PathVariable String id) {
+    public ResponseEntity<MemberDto> getUser(@PathVariable String id) {
         Optional<MemberDto> member = memberService.getMemberById(Long.parseLong(id));
-        return ResponseEntity.ofNullable(member);
+        return ResponseEntity.of(member);
     }
 
     @PatchMapping("/{id}/password")

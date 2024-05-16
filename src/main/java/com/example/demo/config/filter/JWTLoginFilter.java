@@ -3,10 +3,6 @@ package com.example.demo.config.filter;
 import com.example.demo.config.jwt.JWTUtil;
 import com.example.demo.model.request.LoginDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,6 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -31,7 +31,6 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
 
-    // login 요청을 하면 로그인 시도를 위해서 실행되는 함수
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(
@@ -40,21 +39,9 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     ) throws AuthenticationException
     {
         LoginDto login = objectMapper.readValue(request.getInputStream(), LoginDto.class);
-
-/*        Patient patient = patientRepository.findByIdAndStatus(login.getId(), ISOLATION)
-                .orElse(null);*/
-        //todo: 레포지토리로부터 사용자 정보를 가져오는 코드를 추가해야 합니다.
-
-/*        if(patient != null) {
-            return new UsernamePasswordAuthenticationToken(login, null, null);
-        } else{
-            throw new UsernameNotFoundException(String.valueOf(login.getId()));
-        }*/
-
         return new UsernamePasswordAuthenticationToken(login, null, null);
     }
 
-    // 인증이 성공했을 때 실행되는 함수, JWT를 발급해줘야 한다.
     @Override
     protected void successfulAuthentication(
             HttpServletRequest request,
@@ -71,7 +58,6 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
-    // 인증이 실패했을 때 실행되는 함수
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         super.unsuccessfulAuthentication(request, response, failed);

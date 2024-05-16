@@ -1,13 +1,14 @@
 package com.example.demo.config.jwt;
 
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /*
@@ -21,10 +22,17 @@ import java.io.IOException;
 @Slf4j
 public class AuthEntryPoint implements AuthenticationEntryPoint {
  
-    @Override
+/*    @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         //todo : 인증되지 않은 사용자가 보호된 리소스에 접근하려고 할 때의 동작을 정의합니다.
         //예) 401 Unauthorized 에러를 반환합니다.
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+    }*/
+
+    @Override
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+        //todo : 인증되지 않은 사용자가 보호된 리소스에 접근하려고 할 때의 동작을 정의합니다.
+        //예) 401 Unauthorized 에러를 반환합니다.
+        httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
     }
 }

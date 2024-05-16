@@ -2,10 +2,6 @@ package com.example.demo.config.filter;
 
 import com.example.demo.config.jwt.JWTUtil;
 import com.example.demo.config.jwt.VerifyResult;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JWTCheckFilter extends BasicAuthenticationFilter {
@@ -34,7 +34,7 @@ public class JWTCheckFilter extends BasicAuthenticationFilter {
             FilterChain chain
     ) throws IOException, ServletException {
         String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(bearer == null || !bearer.startsWith("Bearer ")){
+        if(bearer == null || !bearer.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }

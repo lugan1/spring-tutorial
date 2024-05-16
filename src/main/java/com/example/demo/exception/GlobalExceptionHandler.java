@@ -3,33 +3,20 @@ package com.example.demo.exception;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.model.ErrorDto;
 import com.example.demo.model.FieldErrorDto;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.nio.file.AccessDeniedException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.demo.enumeration.ErrorCode.*;
 
@@ -38,7 +25,7 @@ import static com.example.demo.enumeration.ErrorCode.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @Override
+/*    @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e,
                                                                          @NonNull HttpHeaders headers,
                                                                          @NonNull HttpStatusCode status,
@@ -169,7 +156,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(List.of(fieldErrorDto))
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+    }*/
 
     //Spring security 오류
 
@@ -261,7 +248,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // 그 밖에 발생하는 모든 예외처리가 이곳으로 모인다.
-    @Override
+/*    @Override
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception e, @Nullable Object body, @NonNull HttpHeaders headers, @NonNull HttpStatusCode statusCode, @NonNull WebRequest request) {
 
@@ -277,7 +264,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         log.error("[Exception] : {}", e.getMessage(), e);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
 
     // 비즈니스 요구사항에 따른 Exception
     @ExceptionHandler

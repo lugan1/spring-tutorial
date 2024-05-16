@@ -2,15 +2,16 @@ package com.example.demo.exception;
 
 import com.example.demo.model.ErrorDto;
 import com.example.demo.model.FieldErrorDto;
-import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
 import java.security.SignatureException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.demo.enumeration.ErrorCode.INVALID_INPUT_VALUE;
 import static com.example.demo.enumeration.ErrorCode.INVALID_TOKEN;
@@ -34,7 +35,7 @@ public class AuthExceptionHandler {
                                 .reason(error.getMessageTemplate())
                                 .build()
                 )
-                .toList();
+                .collect(Collectors.toList());
 
         final ErrorDto response = ErrorDto.builder()
                 .code(INVALID_INPUT_VALUE.getCode())
