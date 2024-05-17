@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ResponseDto;
+import com.example.demo.model.request.GatewayDeviceDto;
+import com.example.demo.model.request.GatewayDto;
 import com.example.demo.model.request.LoginDto;
 import com.example.demo.model.response.LoginResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +23,12 @@ public class PublicController {
     ) {
         LoginResponseDto login = new LoginResponseDto("token", 1234L);
         return ResponseEntity.ok().body(new ResponseDto<>(login));
+    }
+
+    @PostMapping("/gateway")
+    ResponseEntity<Void> saveIotGatewayBiometric(
+            @RequestBody GatewayDto gatewayDto
+    ) {
+        return ResponseEntity.ok().body(null);
     }
 }
