@@ -1,5 +1,8 @@
 package com.example.demo.utils;
 
+import lombok.Value;
+
+
 public enum ParseType {
     OXYGEN(36, 38),
     PULSE(38, 40),

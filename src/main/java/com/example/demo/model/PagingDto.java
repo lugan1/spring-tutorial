@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 @Getter
 @Builder
 public class PagingDto {
-    Integer page;
-    Integer size;
-    Long total;
+    private Integer page;
+    private Integer size;
+    private Long total;
 
     public static <Type> PagingDto of(Page<Type> page) {
         return PagingDto.builder()
