@@ -41,7 +41,8 @@ public class JWTUtil {
 
         } catch (Exception ex){
             DecodedJWT decode = JWT.decode(token);
-            return VerifyResult.builder().success(false)
+            return VerifyResult.builder()
+                    .success(false)
                     .id(decode.getSubject())
                     .build();
         }

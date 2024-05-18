@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL) // 필드가 null인 경우 json 결과에서 제외됨
 public class ResponseDto<T> {
     private final LocalDateTime timestamp = LocalDateTime.now();

@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ResponseDto;
-import com.example.demo.model.request.GatewayDeviceDto;
 import com.example.demo.model.request.GatewayDto;
 import com.example.demo.model.request.LoginDto;
 import com.example.demo.model.response.LoginResponseDto;
