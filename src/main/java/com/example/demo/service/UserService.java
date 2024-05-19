@@ -1,13 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.model.request.PasswordResetDto;
-import com.example.demo.model.response.MemberDto;
+import com.example.demo.model.response.UserDto;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberService {
+public interface UserService {
     boolean resetPassword(PasswordResetDto passwordResetDto);
-    List<MemberDto> getAllMembers();
-    Optional<MemberDto> getMemberById(Long id);
+    List<UserDto> getAllMembers();
+    Optional<UserDto> getMemberById(Long id);
 }

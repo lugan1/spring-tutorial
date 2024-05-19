@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class Patient extends BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
     Long id;
 
@@ -28,7 +28,7 @@ public class Patient extends BaseEntity implements UserDetails {
     /* 유저의 권한 목록, 권한 반환*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(PatientAuthority.builder().build());
+        return Set.of(UserAuthority.builder().build());
     }
 
     @Override

@@ -12,9 +12,9 @@ public enum ParseType {
     STEP(24, 28),
     BATTERY(40, 42);
 
+    private static final int ADVERTISING_LENGTH = 60;
     private final int start;
     private final int end;
-    private static final int ADVERTISING_LENGTH = 60;
 
     ParseType(int start, int end){
         this.start = start;

@@ -1,8 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.request.PasswordResetDto;
-import com.example.demo.model.response.MemberDto;
-import com.example.demo.service.MemberService;
+import com.example.demo.model.response.UserDto;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,19 +11,19 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class UserServiceImpl implements UserService {
     @Override
     public boolean resetPassword(PasswordResetDto passwordResetDto) {
         return false;
     }
 
     @Override
-    public List<MemberDto> getAllMembers() {
+    public List<UserDto> getAllMembers() {
         return List.of();
     }
 
     @Override
-    public Optional<MemberDto> getMemberById(Long id) {
+    public Optional<UserDto> getMemberById(Long id) {
         return Optional.empty();
     }
 }

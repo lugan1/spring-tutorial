@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 
-import com.example.demo.entity.Patient;
+import com.example.demo.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +18,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
-        return Patient.builder().build();
+        return User.builder().build();
     }
 }

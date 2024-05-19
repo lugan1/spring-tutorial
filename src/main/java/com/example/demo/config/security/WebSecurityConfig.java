@@ -37,11 +37,11 @@ public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/public/**",
-            "/members/**"
+            "/users/**"
     };
 
-    private static final String[] MEMBER_AUTHLIST = {
-            "/members/**"
+    private static final String[] User_AUTHLIST = {
+            "/users/**"
     };
 
     @Bean
@@ -59,7 +59,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request.antMatchers(AUTH_WHITELIST).permitAll()
-                                .antMatchers(MEMBER_AUTHLIST).hasRole("MEMBER")
+                                .antMatchers(User_AUTHLIST).hasRole("USER")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
