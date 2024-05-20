@@ -2,6 +2,8 @@ package com.example.demo.utils;
 
 import lombok.Value;
 
+import java.util.Objects;
+
 
 public enum ParseType {
     OXYGEN(36, 38),
@@ -21,6 +23,7 @@ public enum ParseType {
         this.end = end;
     }
 
+
     /**
      * 규격 문서는 현재 없기 때문에, 생활치료센터, 정신응급 프로젝트의 파싱 로직을 그대로 사용
      * @link <a href="https://github.com/softnet-devlop/mental_api">정신응급 프로젝트</a>
@@ -29,10 +32,11 @@ public enum ParseType {
      * @throws IllegalArgumentException advertising 데이터가 규격에 맞지 않을 경우
      * */
     public int parse(String advertising) throws IllegalArgumentException {
-        if(advertising == null || advertising.length() != ADVERTISING_LENGTH  || advertising.length() < end) {
+        if(advertising != null && advertising.length() == ADVERTISING_LENGTH) {
             throw new IllegalArgumentException("Advertising 데이터가 아모밴드의 규격에 맞지 않습니다.");
         }
 
-        return Integer.parseInt(advertising.substring(start, end), 16);
+        String substring = Objects.requireNonNull(advertising).substring(start, end);
+        return Integer.parseInt(substring, 16);
     }
 }
