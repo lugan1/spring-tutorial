@@ -1,7 +1,9 @@
 package com.example.demo.config.filter;
 
 import com.example.demo.config.jwt.JWTUtil;
+import com.example.demo.entity.Member;
 import com.example.demo.model.request.LoginDto;
+import com.example.demo.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -19,16 +22,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
-    final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
 
     public JWTLoginFilter(
             AuthenticationManager authenticationManager,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            MemberRepository memberRepository
     ) {
         super(authenticationManager);
+        setFilterProcessesUrl("/user/login");
         this.objectMapper = objectMapper;
+        this.memberRepository = memberRepository;
         // 이 필터가 처리할 URL을 "/patient/login"으로 설정합니다.
-        setFilterProcessesUrl("/patient/login");
     }
 
     @SneakyThrows
@@ -41,6 +47,12 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         // 이 메서드는 로그인 요청이 있을 때 호출됩니다.
         // 요청에서 로그인 자격 증명을 읽어 사용자를 인증하려고 시도합니다.
         LoginDto login = objectMapper.readValue(request.getInputStream(), LoginDto.class);
+
+        Member member = memberRepository.findByEmail(login.getEmail())
+                .orElse(null);
+
+        if(member == null) throw new UsernameNotFoundException(login.getEmail());
+
         return new UsernamePasswordAuthenticationToken(login, null, null);
     }
 
@@ -53,10 +65,10 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     {
         // 이 메서드는 인증이 성공했을 때 호출됩니다.
         // 인증된 사용자 정보를 요청 속성에 저장하고, JWT 토큰을 응답 헤더에 설정합니다.
-        var patient = (LoginDto) authResult.getPrincipal();
+        var user = (LoginDto) authResult.getPrincipal();
 
-        request.setAttribute("loginUser", patient);
-        response.setHeader(HttpHeaders.AUTHORIZATION, JWTUtil.makeAuthToken(patient));
+        request.setAttribute("loginUser", user);
+        response.setHeader(HttpHeaders.AUTHORIZATION, JWTUtil.makeAuthToken(user));
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         chain.doFilter(request, response);
     }

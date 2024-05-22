@@ -1,9 +1,14 @@
 package com.example.demo.model.request;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.Value;
 
-@Value
+@NoArgsConstructor
+@Setter
+@Getter
 public class LoginDto {
     String email;
     String password;

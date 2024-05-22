@@ -33,7 +33,6 @@ public class JWTUtil {
                     .build()
                     .verify(token);
 
-
             return VerifyResult.builder()
                     .success(true)
                     .id(verify.getSubject())

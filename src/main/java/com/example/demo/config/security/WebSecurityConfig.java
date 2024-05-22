@@ -4,6 +4,7 @@ package com.example.demo.config.security;
 import com.example.demo.config.filter.JWTCheckFilter;
 import com.example.demo.config.filter.JWTLoginFilter;
 import com.example.demo.config.jwt.AuthEntryPoint;
+import com.example.demo.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +33,7 @@ import java.util.List;
 public class WebSecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserDetailsService userDetailsService;
+    private final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;
     private final AuthEntryPoint entryPoint;
 
@@ -51,7 +53,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        final JWTLoginFilter loginFilter = new JWTLoginFilter(authenticationConfiguration.getAuthenticationManager(), objectMapper);
+        final JWTLoginFilter loginFilter = new JWTLoginFilter(authenticationConfiguration.getAuthenticationManager(), objectMapper, memberRepository);
         final JWTCheckFilter checkFilter = new JWTCheckFilter(authenticationConfiguration.getAuthenticationManager(), userDetailsService);
 
         return http.httpBasic(AbstractHttpConfigurer::disable)
