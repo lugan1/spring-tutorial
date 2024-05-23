@@ -46,7 +46,7 @@ public class Member extends BaseEntity implements UserDetails {
     /* 유저의 권한 목록, 권한 반환*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Set.of(UserAuthority.builder().build());
+        return Set.of(MemberAuthority.builder().build());
     }
 
     @Override

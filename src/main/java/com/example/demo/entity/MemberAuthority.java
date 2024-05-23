@@ -5,11 +5,11 @@ import org.springframework.security.core.GrantedAuthority;
 
 
 /**
- * UserAuthority 클래스는 Spring Security의 GrantedAuthority 인터페이스를 구현합니다.
+ * MemberAuthority 클래스는 Spring Security의 GrantedAuthority 인터페이스를 구현합니다.
  * 이 클래스는 특정 사용자가 가진 권한을 나타냅니다.
  */
 @Builder
-public class UserAuthority implements GrantedAuthority {
+public class MemberAuthority implements GrantedAuthority {
 
     /**
      * getAuthority 메서드는 사용자가 가진 권한을 문자열 형태로 반환합니다.
