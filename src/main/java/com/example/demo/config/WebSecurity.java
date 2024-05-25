@@ -1,4 +1,4 @@
-package com.example.demo.config.security;
+package com.example.demo.config;
 
 
 import com.example.demo.config.filter.JWTCheckFilter;
@@ -30,7 +30,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig {
+public class WebSecurity {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserDetailsService userDetailsService;
     private final MemberRepository memberRepository;
