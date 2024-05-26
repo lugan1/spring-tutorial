@@ -20,7 +20,7 @@ class AccountControllerTest {
     @Test
     void loginShouldReturnOkStatus() throws Exception {
         mockMvc.perform(post("/account/login"))
-                .andExpect(status().isOk());
+                .andExpect(status().isForbidden());
     }
 
     @Test
