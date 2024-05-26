@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class BloodPressure {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "max_value", nullable = false)
