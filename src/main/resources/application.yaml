@@ -41,3 +41,8 @@ logging:
         SQL: debug
         type: trace
 
+
+
+sms:
+  id: ${SMS_ID}
+  pw: ${SMS_PW}
