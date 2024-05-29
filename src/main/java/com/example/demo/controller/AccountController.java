@@ -13,6 +13,11 @@ public class AccountController {
 
     }
 
+    @PostMapping("/logout")
+    public void logout() {
+
+    }
+
 
     @PostMapping("/sign-up")
     public void signUp() {

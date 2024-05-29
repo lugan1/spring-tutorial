@@ -7,7 +7,6 @@ public class BiometricServiceImpl implements BiometricService {
 
     @Override
     public void saveBiometricData(String advertising) {
-
         int step = ParseType.STEP.parse(advertising);
         int bloodPressureMax = ParseType.BLOOD_PRESSURE_MAX.parse(advertising);
     }
